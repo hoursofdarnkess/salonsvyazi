@@ -1,0 +1,137 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+class MobileShop
+{
+    public string Brand { get; set; }
+    public string Model { get; set; }
+    public decimal Price { get; set; }
+
+    public MobileShop(string brand, string model, decimal price)
+    {
+        Brand = brand;
+        Model = model;
+        Price = price;
+    }
+
+    public override string ToString()
+    {
+        return $"{Brand},{Model},{Price}";
+    }
+}
+
+class Program
+{
+    static List<MobileShop> mobileShops = new List<MobileShop>();
+    static string filePath = "MobileShopData.txt";
+
+    static void Main(string[] args)
+    {
+        LoadData();
+
+        while (true)
+        {
+            Console.WriteLine("1. Add Mobile");
+            Console.WriteLine("2. Delete Mobile");
+            Console.WriteLine("3. View Mobiles");
+            Console.WriteLine("4. Exit");
+            Console.Write("Choose an option: ");
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    AddMobile();
+                    break;
+                case "2":
+                    DeleteMobile();
+                    break;
+                case "3":
+                    ViewMobiles();
+                    break;
+                case "4":
+                    SaveData();
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Try again.");
+                    break;
+            }
+        }
+    }
+
+    static void AddMobile()
+    {
+        Console.Write("Enter Brand: ");
+        string brand = Console.ReadLine();
+        Console.Write("Enter Model: ");
+        string model = Console.ReadLine();
+        Console.Write("Enter Price: ");
+        decimal price = decimal.Parse(Console.ReadLine());
+
+        MobileShop mobile = new MobileShop(brand, model, price);
+        mobileShops.Add(mobile);
+    }
+
+    static void DeleteMobile()
+    {
+        Console.Write("Enter Model to delete: ");
+        string model = Console.ReadLine();
+        MobileShop mobileToRemove = mobileShops.Find(m => m.Model == model);
+        if (mobileToRemove != null)
+        {
+            mobileShops.Remove(mobileToRemove);
+            Console.WriteLine("Mobile removed successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Mobile not found.");
+        }
+    }
+
+    static void ViewMobiles()
+    {
+        if (mobileShops.Count == 0)
+        {
+            Console.WriteLine("No mobiles available.");
+            return;
+        }
+
+        foreach (var mobile in mobileShops)
+        {
+            Console.WriteLine($"{mobile.Brand} {mobile.Model} - ${mobile.Price}");
+        }
+    }
+
+    static void SaveData()
+    {
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            foreach (var mobile in mobileShops)
+            {
+                writer.WriteLine(mobile);
+            }
+        }
+    }
+
+    static void LoadData()
+    {
+        if (!File.Exists(filePath))
+        {
+            return;
+        }
+
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                string[] parts = line.Split(',');
+                string brand = parts[0];
+                string model = parts[1];
+                decimal price = decimal.Parse(parts[2]);
+                mobileShops.Add(new MobileShop(brand, model, price));
+            }
+        }
+    }
+}

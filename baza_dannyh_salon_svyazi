@@ -2,135 +2,135 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-class MobileShop
+class МагазинМобилок
 {
-    public string Brand { get; set; }
-    public string Model { get; set; }
-    public decimal Price { get; set; }
+    public string Бренд { get; set; }
+    public string Модель { get; set; }
+    public decimal Цена { get; set; }
 
-    public MobileShop(string brand, string model, decimal price)
+    public МагазинМобилок(string бренд, string модель, decimal цена)
     {
-        Brand = brand;
-        Model = model;
-        Price = price;
+        Бренд = бренд;
+        Модель = модель;
+        Цена = цена;
     }
 
     public override string ToString()
     {
-        return $"{Brand},{Model},{Price}";
+        return $"{Бренд},{Модель},{Цена}";
     }
 }
 
-class Program
+class Программа
 {
-    static List<MobileShop> mobileShops = new List<MobileShop>();
-    static string filePath = "MobileShopData.txt";
+    static List<МагазинМобилок> магазиныМобилок = new List<МагазинМобилок>();
+    static string путьКФайлу = "ДанныеМагазинаМобилок.txt";
 
     static void Main(string[] args)
     {
-        LoadData();
+        ЗагрузитьДанные();
 
         while (true)
         {
-            Console.WriteLine("1. Add Mobile");
-            Console.WriteLine("2. Delete Mobile");
-            Console.WriteLine("3. View Mobiles");
-            Console.WriteLine("4. Exit");
-            Console.Write("Choose an option: ");
-            string choice = Console.ReadLine();
+            Console.WriteLine("1. Добавить Мобильник");
+            Console.WriteLine("2. Удалить Мобильник");
+            Console.WriteLine("3. Посмотреть Мобильники");
+            Console.WriteLine("4. Выйти");
+            Console.Write("Выберите опцию: ");
+            string выбор = Console.ReadLine();
 
-            switch (choice)
+            switch (выбор)
             {
                 case "1":
-                    AddMobile();
+                    ДобавитьМобильник();
                     break;
                 case "2":
-                    DeleteMobile();
+                    УдалитьМобильник();
                     break;
                 case "3":
-                    ViewMobiles();
+                    ПосмотретьМобильники();
                     break;
                 case "4":
-                    SaveData();
+                    СохранитьДанные();
                     return;
                 default:
-                    Console.WriteLine("Invalid choice. Try again.");
+                    Console.WriteLine("Неверный выбор. Попробуйте снова.");
                     break;
             }
         }
     }
 
-    static void AddMobile()
+    static void ДобавитьМобильник()
     {
-        Console.Write("Enter Brand: ");
-        string brand = Console.ReadLine();
-        Console.Write("Enter Model: ");
-        string model = Console.ReadLine();
-        Console.Write("Enter Price: ");
-        decimal price = decimal.Parse(Console.ReadLine());
+        Console.Write("Введите Бренд: ");
+        string бренд = Console.ReadLine();
+        Console.Write("Введите Модель: ");
+        string модель = Console.ReadLine();
+        Console.Write("Введите Цену: ");
+        decimal цена = decimal.Parse(Console.ReadLine());
 
-        MobileShop mobile = new MobileShop(brand, model, price);
-        mobileShops.Add(mobile);
+        МагазинМобилок мобильник = new МагазинМобилок(бренд, модель, цена);
+        магазиныМобилок.Add(мобильник);
     }
 
-    static void DeleteMobile()
+    static void УдалитьМобильник()
     {
-        Console.Write("Enter Model to delete: ");
-        string model = Console.ReadLine();
-        MobileShop mobileToRemove = mobileShops.Find(m => m.Model == model);
-        if (mobileToRemove != null)
+        Console.Write("Введите Модель для удаления: ");
+        string модель = Console.ReadLine();
+        МагазинМобилок мобильникДляУдаления = магазиныМобилок.Find(m => m.Модель == модель);
+        if (мобильникДляУдаления != null)
         {
-            mobileShops.Remove(mobileToRemove);
-            Console.WriteLine("Mobile removed successfully.");
+            магазиныМобилок.Remove(мобильникДляУдаления);
+            Console.WriteLine("Мобильник успешно удален.");
         }
         else
         {
-            Console.WriteLine("Mobile not found.");
+            Console.WriteLine("Мобильник не найден.");
         }
     }
 
-    static void ViewMobiles()
+    static void ПосмотретьМобильники()
     {
-        if (mobileShops.Count == 0)
+        if (магазиныМобилок.Count == 0)
         {
-            Console.WriteLine("No mobiles available.");
+            Console.WriteLine("Нет доступных мобильников.");
             return;
         }
 
-        foreach (var mobile in mobileShops)
+        foreach (var мобильник in магазиныМобилок)
         {
-            Console.WriteLine($"{mobile.Brand} {mobile.Model} - ${mobile.Price}");
+            Console.WriteLine($"{мобильник.Бренд} {мобильник.Модель} - {мобильник.Цена} руб.");
         }
     }
 
-    static void SaveData()
+    static void СохранитьДанные()
     {
-        using (StreamWriter writer = new StreamWriter(filePath))
+        using (StreamWriter writer = new StreamWriter(путьКФайлу))
         {
-            foreach (var mobile in mobileShops)
+            foreach (var мобильник in магазиныМобилок)
             {
-                writer.WriteLine(mobile);
+                writer.WriteLine(mобильник);
             }
         }
     }
 
-    static void LoadData()
+    static void ЗагрузитьДанные()
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(путьКФайлу))
         {
             return;
         }
 
-        using (StreamReader reader = new StreamReader(filePath))
+        using (StreamReader reader = new StreamReader(путьКФайлу))
         {
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            string строка;
+            while ((строка = reader.ReadLine()) != null)
             {
-                string[] parts = line.Split(',');
-                string brand = parts[0];
-                string model = parts[1];
-                decimal price = decimal.Parse(parts[2]);
-                mobileShops.Add(new MobileShop(brand, model, price));
+                string[] части = строка.Split(',');
+                string бренд = части[0];
+                string модель = части[1];
+                decimal цена = decimal.Parse(части[2]);
+                магазиныМобилок.Add(new МагазинМобилок(бренд, модель, цена));
             }
         }
     }
